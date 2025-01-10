@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Wed May  9 10:10:04 2018
 
-@author: Frank
-"""
 
 from MovieLens import MovieLens
 from surprise import KNNBasic
@@ -38,7 +34,13 @@ for innerID, score in enumerate(similarityRow):
     if (innerID != testUserInnerID):
         similarUsers.append( (innerID, score) )
 
-kNeighbors = heapq.nlargest(k, similarUsers, key=lambda t: t[1])
+#kNeighbors = heapq.nlargest(k, similarUsers, key=lambda t: t[1])
+
+# Get by the rating over 0.98
+kNeighbors = []
+for rating in similarUsers:
+    if rating[1] > 0.98:
+        kNeighbors.append(rating)
 
 # Get the stuff they rated, and add up ratings for each item, weighted by user similarity
 candidates = defaultdict(float)

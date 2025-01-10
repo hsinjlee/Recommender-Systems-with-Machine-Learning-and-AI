@@ -24,14 +24,14 @@ evalData = EvaluationData(data, rankings)
 
 # Train on leave-One-Out train set
 trainSet = evalData.GetLOOCVTrainSet()
-sim_options = {'name': 'cosine',
-               'user_based': True
-               }
+# sim_options = {'name': 'cosine',
+#                'user_based': True
+#                }
 
 # Try the item based
-# sim_options = {'name': 'cosine',
-#                'user_based': False
-#                }
+sim_options = {'name': 'cosine',
+               'user_based': False
+               }
 
 model = KNNBasic(sim_options=sim_options)
 model.fit(trainSet)
@@ -44,23 +44,29 @@ topN = defaultdict(list)
 k = 10
 for uiid in range(trainSet.n_users):
     # Get top N similar users to this one
-    similarityRow = simsMatrix[uiid]
+    # similarityRow = simsMatrix[uiid]
     
-    similarUsers = []
-    for innerID, score in enumerate(similarityRow):
-        if (innerID != uiid):
-            similarUsers.append( (innerID, score) )
+    # similarUsers = []
+    # for innerID, score in enumerate(similarityRow):
+    #     if (innerID != uiid):
+    #         similarUsers.append( (innerID, score) )
     
-    kNeighbors = heapq.nlargest(k, similarUsers, key=lambda t: t[1])
+    userRatings = trainSet.ur[uiid]
+    kNeighbors = heapq.nlargest(k, userRatings, key=lambda t: t[1])
     
     # Get the stuff they rated, and add up ratings for each item, weighted by user similarity
     candidates = defaultdict(float)
-    for similarUser in kNeighbors:
-        innerID = similarUser[0]
-        userSimilarityScore = similarUser[1]
-        theirRatings = trainSet.ur[innerID]
-        for rating in theirRatings:
-            candidates[rating[0]] += (rating[1] / 5.0) * userSimilarityScore
+    # for similarUser in kNeighbors:
+    #     innerID = similarUser[0]
+    #     userSimilarityScore = similarUser[1]
+    #     theirRatings = trainSet.ur[innerID]
+    #     for rating in theirRatings:
+    #         candidates[rating[0]] += (rating[1] / 5.0) * userSimilarityScore
+    
+    for itemID, rating in kNeighbors:
+        similarityRow = simsMatrix[itemID]
+        for innerID, score in enumerate(similarityRow):
+            candidates[innerID] += score * (rating / 5.0)
         
     # Build a dictionary of stuff the user has already seen
     watched = {}

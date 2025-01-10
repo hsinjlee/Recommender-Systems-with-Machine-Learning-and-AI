@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Wed May  9 10:10:04 2018
-
-@author: Frank
-"""
 
 from MovieLens import MovieLens
 from surprise import KNNBasic
@@ -31,7 +26,14 @@ testUserInnerID = trainSet.to_inner_uid(testSubject)
 
 # Get the top K items we rated
 testUserRatings = trainSet.ur[testUserInnerID]
-kNeighbors = heapq.nlargest(k, testUserRatings, key=lambda t: t[1])
+
+#kNeighbors = heapq.nlargest(k, testUserRatings, key=lambda t: t[1])
+
+# Get by the rating over 4.0
+kNeighbors = []
+for rating in testUserRatings:
+    if rating[1] > 4.0:
+        kNeighbors.append(rating)
 
 # Get similar items to stuff we liked (weighted by rating)
 candidates = defaultdict(float)

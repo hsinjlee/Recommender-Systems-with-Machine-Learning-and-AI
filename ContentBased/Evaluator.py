@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Thu May  3 10:22:34 2018
 
-@author: Frank
-"""
 from EvaluationData import EvaluationData
 from EvaluatedAlgorithm import EvaluatedAlgorithm
 
@@ -71,7 +67,14 @@ class Evaluator:
             print ("\nWe recommend:")
             for userID, movieID, actualRating, estimatedRating, _ in predictions:
                 intMovieID = int(movieID)
+                
+                #recommendations.append((intMovieID, estimatedRating, ml.getPopularityRanks()[intMovieID]))
+                
                 recommendations.append((intMovieID, estimatedRating))
+                
+            
+            #recommendations.sort(key=lambda x: x[2])
+            #recommendations.sort(key=lambda x: x[1], reverse=True)
             
             recommendations.sort(key=lambda x: x[1], reverse=True)
             

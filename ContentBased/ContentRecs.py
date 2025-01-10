@@ -1,10 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Fri May  4 16:25:39 2018
-
-@author: Frank
-"""
-
 
 from MovieLens import MovieLens
 from ContentKNNAlgorithm import ContentKNNAlgorithm
